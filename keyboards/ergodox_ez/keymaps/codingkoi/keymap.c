@@ -1,31 +1,32 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 
-enum layers {
-    BASE,  // default layer
-    SYMB,  // symbols
-    MDIA,  // media keys
+enum custom_layers {
+    BASE,   // default layer
+    SYMB,   // symbols
+    MDIA,   // media keys
 };
+
 
 enum custom_keycodes {
-    VRSN = SAFE_RANGE,
-    RGB_SLD
+  PLACEHOLDER = SAFE_RANGE, // can always be here
+  VRSN,
+  RGB_SLD
 };
 
-// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   `    |   1  |   2  |   3  |   4  |   5  | ESC  |           | Media|   6  |   7  |   8  |   9  |   0  |   -    |
+ * |   `    |   1  |   2  |   3  |   4  |   5  | ESC  |           |CapWrd|   6  |   7  |   8  |   9  |   0  |   -    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | Tab    |   Q  |   W  |   E  |   R  |   T  | Hyper|           |  [   |   Y  |   U  |   I  |   O  |   P  |   ]    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | LCtrl  |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |  ;   |   '    |
- * |--------+------+------+------+------+------|  L1  |           | Meh  |------+------+------+------+------+--------|
- * | LShift |Z/Ctrl|   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  | RShift |
+ * |--------+------+------+------+------+------|  L1  |           | Media|------+------+------+------+------+--------|
+ * | LShift |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |   /  | RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | LGui | LAlt |  Meh |   -  |   =  |                                       | Left | Down |  Up  | Right|   \  |
+ *   | LGui | LAlt | Meh  |   -  |   =  |                                       | Left | Down |  Up  | Right|   \  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | C+Del| Del  |       | RAlt  | RCtrl|
@@ -42,17 +43,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,         KC_1,         KC_2,     KC_3,      KC_4,   KC_5,   KC_ESC,
         KC_TAB,         KC_Q,         KC_W,     KC_E,      KC_R,   KC_T,   ALL_T(KC_NO),
         KC_LCTL,        KC_A,         KC_S,     KC_D,      KC_F,   KC_G,
-        SC_LSPO,        CTL_T(KC_Z),  KC_X,     KC_C,      KC_V,   KC_B,   MO(SYMB),
+        SC_LSPO,        KC_Z,         KC_X,     KC_C,      KC_V,   KC_B,   MO(SYMB),
         KC_LWIN,        KC_LALT,      KC_MEH,  KC_MINS,   KC_EQL,
 
                                               LALT(KC_BSPC),  KC_DEL,
                                                               KC_HOME,
                                                KC_SPC,KC_BSPC,KC_END,
         // right hand
-             MO(MDIA),   KC_6,   KC_7,    KC_8,     KC_9,   KC_0,     KC_MINS,
+             CW_TOGG,   KC_6,   KC_7,    KC_8,     KC_9,   KC_0,     KC_MINS,
              KC_LBRC,     KC_Y,   KC_U,    KC_I,     KC_O,   KC_P,     KC_RBRC,
-                          KC_H,   KC_J,    KC_K,     KC_L,   KC_SCLN,  ALL_T(KC_QUOT),
-             MEH_T(KC_NO),KC_N,   KC_M,    KC_COMM,  KC_DOT, KC_SLSH,  SC_RSPC,
+                          KC_H,   KC_J,    KC_K,     KC_L,   KC_SCLN,  KC_QUOT,
+             MO(MDIA),KC_N,   KC_M,    KC_COMM,  KC_DOT, KC_SLSH,  SC_RSPC,
                                   KC_LEFT, KC_DOWN,  KC_UP,  KC_RGHT,  KC_BSLS,
 
              KC_RALT,        CTL_T(KC_ESC),
@@ -104,15 +105,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 2: Media and mouse keys
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |  Mute  |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |      |      | MsUp |      |      |      |           |      |      |      |      |      |      |        |
+ * |        |      |      | MsUp |      |      |      |           |      |      |      |      |      |      | VolUp  |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|      |      |      |      |      |  Play  |
+ * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|      |      |      |      |      | VolDn  |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |      |      |      |      |      |           |      |      |      | Prev | Next |      |        |
+ * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      |      |      | Lclk | Rclk |                                       |VolUp |VolDn | Mute |      |      |
+ *   |      |      |      | Lclk | Rclk |                                       |Prev  | Stop | Play | Next |      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |      |      |       |      |      |
@@ -143,6 +144,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        KC_TRNS, KC_TRNS, KC_WBAK
 ),
 };
+
 // clang-format on
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
